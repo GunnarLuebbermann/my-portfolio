@@ -1,47 +1,87 @@
 "use client";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import WavingHand from "./components/wavingHand";
+
+const containerVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+};
 
 export default function HomePage() {
   return (
-    <section className="flex flex-col items-center text-center py-16">
-      <img
-        src="/gl.jpg"
-        alt="Profilbild"
-        className="w-32 h-32 rounded-full mb-6 border-4 border-gray-200 dark:border-gray-700"
-      />
-      <h1 className="text-4xl font-bold mb-2">
-        Hey, ich bin Gunnar{" "}
-        <motion.span animate={{ rotate: [0, 14, -8, 14, -4, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          className="inline-block">
-          👋
-        </motion.span>
-      </h1>
-      <p className="text-lg text-gray-600 dark:text-gray-400 max-w-xl mb-8">
+    <motion.section 
+      className="flex flex-col items-center text-center py-16 px-4"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div
+        variants={itemVariants}
+        className="relative mb-8"
+      >
+        <Image
+          src="/gl.jpg"
+          alt="Gunnar's profile picture"
+          width={128}
+          height={128}
+          className="rounded-full border-4 border-gray-200 dark:border-gray-700 shadow-lg"
+          priority
+        />
+      </motion.div>
+      
+      <motion.h1 
+        variants={itemVariants}
+        className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-foreground to-gray-600 bg-clip-text text-transparent py-2"
+      >
+        Hey, ich bin Gunnar <WavingHand />
+      </motion.h1>
+      
+      <motion.p 
+        variants={itemVariants}
+        className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mb-12 leading-relaxed"
+      >
         Ich bin Webentwickler mit Fokus auf moderne Frontend-Technologien,
         sauberen Code und ansprechendes Design. Hier findest du meine Projekte
         und Möglichkeiten zur Kontaktaufnahme.
-      </p>
-      <div className="flex gap-4">
-        <a
+      </motion.p>
+      
+      <motion.div 
+        variants={itemVariants}
+        className="flex flex-col sm:flex-row gap-4"
+      >
+        <Link
           href="/projects"
-          className="bg-foreground text-background px-5 py-2 rounded-lg font-medium hover:opacity-80 transition"
+          className="bg-foreground text-background px-6 py-3 rounded-lg font-medium hover:scale-105 transition-transform shadow-lg hover:shadow-xl"
         >
           Zu meinen Projekten
-        </a>
-        <a
+        </Link>
+        <Link
           href="/skills"
-          className="bg-foreground text-background px-5 py-2 rounded-lg font-medium hover:opacity-80 transition"
+          className="bg-foreground text-background px-6 py-3 rounded-lg font-medium hover:scale-105 transition-transform shadow-lg hover:shadow-xl"
         >
           Zu meinen Skills
-        </a>
-        <a
+        </Link>
+        <Link
           href="/contact"
-          className="border border-foreground px-5 py-2 rounded-lg font-medium hover:bg-foreground hover:text-background transition"
+          className="border-2 border-foreground px-6 py-3 rounded-lg font-medium hover:bg-foreground hover:text-background transition-all hover:scale-105"
         >
           Kontakt aufnehmen
-        </a>
-      </div>
-    </section>
+        </Link>
+      </motion.div>
+    </motion.section>
   );
 }
