@@ -8,7 +8,7 @@ const projects: Project[] = [
   {
     title: "Portfolio Website",
     description: "Meine persönliche Seite mit Next.js und TailwindCSS.",
-    link: "https://github.com/deinname/portfolio",
+    link: "https://github.com/GunnarLuebbermann/my-portfolio",
   },
   // {
   //   title: "React Dashboard",
