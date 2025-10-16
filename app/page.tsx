@@ -47,7 +47,7 @@ export default function HomePage() {
         variants={itemVariants}
         className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-foreground to-gray-600 bg-clip-text text-transparent py-2"
       >
-        Hey, ich bin Gunnar <WavingHand />
+        Hey, ich bin Gunnar <span className="text-foreground"><WavingHand /></span>
       </motion.h1>
       
       <motion.p 

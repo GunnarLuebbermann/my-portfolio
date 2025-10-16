@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="de">
       <body className="bg-background text-foreground font-sans antialiased">
-        <header className="sticky top-0 z-50 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+        <header className="sticky top-0 z-50 w-full backdrop-blur-sm">
           <div className="mx-auto max-w-5xl px-6">
             <Navbar />
           </div>
