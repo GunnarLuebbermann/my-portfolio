@@ -1,5 +1,5 @@
 import "./globals.css";
-import Link from "next/link";
+import Navbar from "./components/navbar";
 
 export const metadata = {
   title: "Mein Portfolio",
@@ -15,28 +15,7 @@ export default function RootLayout({
     <html lang="de">
       <body className="bg-background text-foreground font-sans antialiased">
         <header className="border-b border-gray-200 dark:border-gray-800">
-          <nav className="mx-auto flex max-w-5xl items-center justify-between p-4">
-            <h1 className="text-xl font-bold">
-              <Link href="/">Gunnar</Link>
-            </h1>
-            <ul className="flex gap-6 text-sm">
-              <li>
-                <Link href="/projects" className="hover:underline">
-                  Projekte
-                </Link>
-              </li>
-              <li>
-                <Link href="/skills" className="hover:underline">
-                  Skills
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:underline">
-                  Kontakt
-                </Link>
-              </li>
-            </ul>
-          </nav>
+          <Navbar />
         </header>
 
         <main className="mx-auto max-w-5xl p-6">{children}</main>
