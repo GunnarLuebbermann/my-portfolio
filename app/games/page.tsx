@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Gamepad2, Zap, Puzzle, CircleDot, Square, Layout, Bird, Bomb, Hash } from "lucide-react";
+import { Zap, Puzzle, CircleDot, Square, Layout, Bird, Bomb, Hash } from "lucide-react";
 
 export default function GamesPage() {
   const games = [
