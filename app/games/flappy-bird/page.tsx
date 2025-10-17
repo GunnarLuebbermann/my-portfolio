@@ -194,8 +194,11 @@ export default function FlappyBirdPage() {
     const onKey = (e: KeyboardEvent) => {
       if (e.code === "Space") {
         e.preventDefault();
-        if (gameOverRef.current) resetGame(true);
-        else { if (!running) setRunning(true); flap(); }
+        if (!running) setRunning(true); flap();
+      }
+      if (e.code === "KeyB" && gameOverRef.current) {
+        e.preventDefault();
+        resetGame(true);
       }
     };
     window.addEventListener("keydown", onKey);
