@@ -81,6 +81,8 @@ export default function FlappyBirdPage() {
     if (!playerName) return;
     await supabase.from("flappy-bird-highscores").insert([{ name: playerName, score }]);
     setPlayerName("");
+    setScore(0);
+    scoreRef.current = 0;
     fetchHighscores();
   };
 
@@ -117,7 +119,7 @@ export default function FlappyBirdPage() {
         pipes.current.forEach((p) => {
           if (!p.scored && p.x + p.width < 120) {
             p.scored = true;
-            scoreRef.current += 1;   // Score in Ref aktualisieren
+            scoreRef.current += 1;
             setScore((prev) => prev + 1);
           }
         });
@@ -191,7 +193,7 @@ export default function FlappyBirdPage() {
         e.preventDefault();
         if (!running) setRunning(true); flap();
       }
-      if (e.code === "KeyB" && gameOverRef.current) {
+    if (e.code === "Comma" && gameOverRef.current) {
         e.preventDefault();
         resetGame(true);
       }
