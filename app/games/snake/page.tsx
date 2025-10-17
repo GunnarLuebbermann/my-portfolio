@@ -115,7 +115,7 @@ export default function SnakePage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen text-white pt-8">
+    <div className="flex flex-col items-center justify-center text-white pt-8">
       <motion.h1
       className="text-3xl font-bold mb-8 text-green-400"
       initial={{ opacity: 0, y: -10 }}

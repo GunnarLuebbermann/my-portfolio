@@ -27,6 +27,20 @@ export default function GamesPage() {
       color: "from-pink-500 to-rose-700",
     },
     {
+      name: "2048",
+      slug: "2048",
+      description: "Kombiniere Zahlen bis 2048.",
+      icon: <Hash className="w-8 h-8 text-amber-400" />,
+      color: "from-amber-500 to-yellow-700",
+    },
+    {
+      name: "Flappy Bird",
+      slug: "flappy-bird",
+      description: "Flieg durch die Röhren.",
+      icon: <Bird className="w-8 h-8 text-sky-400" />,
+      color: "from-sky-500 to-cyan-700",
+    },
+    {
       name: "Pong",
       slug: "pong",
       description: "Klassisches Paddle-Duell.",
@@ -43,27 +57,11 @@ export default function GamesPage() {
       disabled: true,
     },
     {
-      name: "Flappy Bird",
-      slug: "flappy-bird",
-      description: "Flieg durch die Röhren.",
-      icon: <Bird className="w-8 h-8 text-sky-400" />,
-      color: "from-sky-500 to-cyan-700",
-      disabled: true,
-    },
-    {
       name: "Minesweeper",
       slug: "minesweeper",
       description: "Finde alle Minen.",
       icon: <Bomb className="w-8 h-8 text-gray-300" />,
       color: "from-gray-500 to-slate-700",
-      disabled: true,
-    },
-    {
-      name: "2048",
-      slug: "2048",
-      description: "Kombiniere Zahlen bis 2048.",
-      icon: <Hash className="w-8 h-8 text-amber-400" />,
-      color: "from-amber-500 to-yellow-700",
       disabled: true,
     },
   ];
