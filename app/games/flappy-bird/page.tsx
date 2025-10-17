@@ -11,7 +11,6 @@ export default function FlappyBirdPage() {
   const birdY = useRef<number>(200);
   const birdV = useRef<number>(0);
   const pipes = useRef<Pipe[]>([]);
-  const scoreRef = useRef<number>(0);
   const gameOverRef = useRef<boolean>(false);
 
   const [, setTick] = useState(0);
@@ -28,18 +27,17 @@ export default function FlappyBirdPage() {
   const pipeSpeed = 2.4;
   const pipeWidth = 60;
   const pipeGap = 150;
-  const pipeInterval = 1500;
-  const lastPipeTimeRef = useRef<number>(0);
+  const pipeInterval = 1.5; // Sekunden
+  const pipeTimer = useRef(0);
 
   const resetGame = (start = true) => {
     birdY.current = height / 2;
     birdV.current = 0;
     pipes.current = [];
-    scoreRef.current = 0;
     gameOverRef.current = false;
     setScore(0);
     setRunning(start);
-    lastPipeTimeRef.current = performance.now();
+    pipeTimer.current = 0;
   };
 
   const flap = () => {
@@ -51,22 +49,20 @@ export default function FlappyBirdPage() {
   const checkCollision = (): boolean => {
     const y = birdY.current;
     if (y - birdRadius <= 0 || y + birdRadius >= height) return true;
-    return pipes.current.some((p) => circleRectCollision(p));
-  };
-
-  const circleRectCollision = (p: Pipe) => {
-    const cx = 120;
-    const cy = birdY.current;
-    const topRect = { x: p.x, y: 0, w: p.width, h: p.gapY };
-    const bottomRect = { x: p.x, y: p.gapY + p.gapHeight, w: p.width, h: height - (p.gapY + p.gapHeight) };
-    const intersects = (rect: { x: number; y: number; w: number; h: number }) => {
-      const closestX = Math.max(rect.x, Math.min(cx, rect.x + rect.w));
-      const closestY = Math.max(rect.y, Math.min(cy, rect.y + rect.h));
-      const dx = cx - closestX;
-      const dy = cy - closestY;
-      return dx * dx + dy * dy <= birdRadius * birdRadius;
-    };
-    return intersects(topRect) || intersects(bottomRect);
+    return pipes.current.some((p) => {
+      const cx = 120;
+      const cy = birdY.current;
+      const topRect = { x: p.x, y: 0, w: p.width, h: p.gapY };
+      const bottomRect = { x: p.x, y: p.gapY + p.gapHeight, w: p.width, h: height - (p.gapY + p.gapHeight) };
+      const intersects = (rect: { x: number; y: number; w: number; h: number }) => {
+        const closestX = Math.max(rect.x, Math.min(cx, rect.x + rect.w));
+        const closestY = Math.max(rect.y, Math.min(cy, rect.y + rect.h));
+        const dx = cx - closestX;
+        const dy = cy - closestY;
+        return dx * dx + dy * dy <= birdRadius * birdRadius;
+      };
+      return intersects(topRect) || intersects(bottomRect);
+    });
   };
 
   // Supabase Highscores
@@ -87,9 +83,7 @@ export default function FlappyBirdPage() {
   };
 
   useEffect(() => {
-    const load = async () => {
-      await fetchHighscores();
-    };
+    const load = async () => await fetchHighscores();
     load();
   }, []);
 
@@ -100,29 +94,31 @@ export default function FlappyBirdPage() {
     let lastTime = performance.now();
 
     const handleFrame = (t: number) => {
-      const dt = t - lastTime;
+      const dt = (t - lastTime) / 1000; // Sekunden
       lastTime = t;
 
-      const dtSec = dt / 1000; // in Sekunden
-
       if (running && !gameOverRef.current) {
-        birdV.current += gravity * dtSec * 60; // FPS-unabhängig
-        birdY.current += birdV.current * dtSec * 60;
+        // FPS-unabhängig
+        birdV.current += gravity * dt * 60;
+        birdY.current += birdV.current * dt * 60;
 
+        // Pipes bewegen
         pipes.current.forEach((p) => (p.x -= pipeSpeed));
         if (pipes.current.length && pipes.current[0].x + pipeWidth < 0) pipes.current.shift();
 
-        if (t - lastPipeTimeRef.current > pipeInterval) {
-          lastPipeTimeRef.current = t;
+        // Pipes spawn
+        pipeTimer.current += dt;
+        if (pipeTimer.current > pipeInterval) {
+          pipeTimer.current = 0;
           const gapY = 80 + Math.random() * (height - 160 - pipeGap);
           pipes.current.push({ x: width + 20, width: pipeWidth, gapY, gapHeight: pipeGap });
         }
 
+        // Score
         pipes.current.forEach((p) => {
           if (!p.scored && p.x + p.width < 120) {
             p.scored = true;
-            scoreRef.current += 1;
-            setScore(scoreRef.current);
+            setScore((prev) => prev + 1);
           }
         });
 
@@ -157,7 +153,7 @@ export default function FlappyBirdPage() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    // Background Farbverlauf
+    // Background
     const grad = ctx.createLinearGradient(0, 0, 0, ch);
     grad.addColorStop(0, "#70c5ce");
     grad.addColorStop(1, "#a0e0f0");
@@ -193,7 +189,7 @@ export default function FlappyBirdPage() {
     ctx.fillText(`${score}`, cw / 2, 30);
   };
 
-  // Steuerung: Space / Click / Touch
+  // Steuerung: Space / Click / Tap
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.code === "Space") {
@@ -249,7 +245,9 @@ export default function FlappyBirdPage() {
             onChange={(e) => setPlayerName(e.target.value)}
             className="w-full px-3 py-2 rounded bg-white text-gray-700 placeholder-gray-400"
           />
-          <button onClick={submitHighscore} className="px-4 py-2 bg-green-500 rounded text-white font-bold">Highscore speichern</button>
+          <button onClick={submitHighscore} className="px-4 py-2 bg-green-500 rounded text-white font-bold">
+            Highscore speichern
+          </button>
         </div>
       )}
 
