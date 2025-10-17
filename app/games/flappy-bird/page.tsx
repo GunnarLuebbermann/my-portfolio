@@ -22,13 +22,14 @@ export default function FlappyBirdPage() {
   const width = 480;
   const height = 640;
   const birdRadius = 14;
-  const gravity = 0.6;
-  const flapVelocity = -9.5;
-  const pipeSpeed = 2.4;
+  const gravity = 1600; // Pixel pro Sekunde²
+  const flapVelocity = -400; // Pixel pro Sekunde
+  const pipeSpeed = 400; // Pixel pro Sekunde
   const pipeWidth = 60;
   const pipeGap = 150;
   const pipeInterval = 1.5; // Sekunden
   const pipeTimer = useRef(0);
+  const scoreRef = useRef(0);
 
   const resetGame = (start = true) => {
     birdY.current = height / 2;
@@ -36,6 +37,7 @@ export default function FlappyBirdPage() {
     pipes.current = [];
     gameOverRef.current = false;
     setScore(0);
+    scoreRef.current = 0;
     setRunning(start);
     pipeTimer.current = 0;
   };
@@ -82,10 +84,7 @@ export default function FlappyBirdPage() {
     fetchHighscores();
   };
 
-  useEffect(() => {
-    const load = async () => await fetchHighscores();
-    load();
-  }, []);
+  useEffect(() => { fetchHighscores(); }, []);
 
   // Main game loop
   useEffect(() => {
@@ -99,11 +98,11 @@ export default function FlappyBirdPage() {
 
       if (running && !gameOverRef.current) {
         // FPS-unabhängig
-        birdV.current += gravity * dt * 60;
-        birdY.current += birdV.current * dt * 60;
+        birdV.current += gravity * dt;
+        birdY.current += birdV.current * dt;
 
         // Pipes bewegen
-        pipes.current.forEach((p) => (p.x -= pipeSpeed));
+        pipes.current.forEach((p) => (p.x -= pipeSpeed * dt));
         if (pipes.current.length && pipes.current[0].x + pipeWidth < 0) pipes.current.shift();
 
         // Pipes spawn
@@ -118,6 +117,7 @@ export default function FlappyBirdPage() {
         pipes.current.forEach((p) => {
           if (!p.scored && p.x + p.width < 120) {
             p.scored = true;
+            scoreRef.current += 1;   // Score in Ref aktualisieren
             setScore((prev) => prev + 1);
           }
         });
@@ -133,17 +133,12 @@ export default function FlappyBirdPage() {
     };
 
     rafRef.current = requestAnimationFrame(handleFrame);
-    return () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-      }
-    };
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
   }, [running]);
 
   const draw = (ctx: CanvasRenderingContext2D) => {
     const dpr = window.devicePixelRatio || 1;
-    const cw = width,
-      ch = height;
+    const cw = width, ch = height;
     const canvas = ctx.canvas;
     if (canvas.width !== cw * dpr || canvas.height !== ch * dpr) {
       canvas.width = cw * dpr;
@@ -175,7 +170,7 @@ export default function FlappyBirdPage() {
     const birdX = 120;
     ctx.save();
     ctx.translate(birdX, birdY.current);
-    ctx.rotate(Math.max(-0.6, Math.min(0.8, birdV.current / 12)));
+    ctx.rotate(Math.max(-0.6, Math.min(0.8, birdV.current / 500))); // kleiner Faktor jetzt FPS-unabhängig
     ctx.beginPath();
     ctx.fillStyle = "#FFD33D";
     ctx.arc(0, 0, birdRadius, 0, Math.PI * 2);
@@ -186,10 +181,10 @@ export default function FlappyBirdPage() {
     ctx.fillStyle = "#fff";
     ctx.font = "22px Inter, Arial";
     ctx.textAlign = "center";
-    ctx.fillText(`${score}`, cw / 2, 30);
+    ctx.fillText(`${scoreRef.current}`, cw / 2, 30);
   };
 
-  // Steuerung: Space / Click / Tap
+  // Steuerung: Space / Click / Tap / B
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.code === "Space") {
@@ -204,18 +199,13 @@ export default function FlappyBirdPage() {
     window.addEventListener("keydown", onKey);
 
     const canvas = canvasRef.current!;
-    const onClick = () => {
-      if (gameOverRef.current) resetGame(true);
-      else { if (!running) setRunning(true); flap(); }
-    };
+    const onClick = () => { if (gameOverRef.current) resetGame(true); else { if (!running) setRunning(true); flap(); } };
     const onTouch = (e: TouchEvent) => { e.preventDefault(); onClick(); };
 
-    canvas.addEventListener("click", onClick);
     canvas.addEventListener("touchstart", onTouch, { passive: false });
 
     return () => {
       window.removeEventListener("keydown", onKey);
-      canvas.removeEventListener("click", onClick);
       canvas.removeEventListener("touchstart", onTouch);
     };
   }, [running]);
@@ -232,9 +222,7 @@ export default function FlappyBirdPage() {
         <div className="flex flex-col gap-4 w-64">
           <h2 className="text-xl font-bold">Highscores</h2>
           <ol className="list-decimal ml-4">
-            {highscores.map((h, idx) => (
-              <li key={idx} className="text-gray-200">{h.name}: {h.score}</li>
-            ))}
+            {highscores.map((h, idx) => <li key={idx} className="text-gray-200">{h.name}: {h.score}</li>)}
           </ol>
         </div>
       </div>
@@ -255,7 +243,7 @@ export default function FlappyBirdPage() {
       )}
 
       <p className="text-sm text-gray-300 mt-4 text-center">
-        Steuerung: Klick / Tap / Space. Bei Game Over: Klick oder Tap, um neu zu starten.
+        Steuerung: Tap / Space. Bei Game Over: Tap oder B, um neu zu starten.
       </p>
     </div>
   );
