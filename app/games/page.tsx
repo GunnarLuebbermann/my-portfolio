@@ -32,6 +32,7 @@ export default function GamesPage() {
       description: "Kombiniere Zahlen bis 2048.",
       icon: <Hash className="w-8 h-8 text-amber-400" />,
       color: "from-amber-500 to-yellow-700",
+      disabled: true,
     },
     {
       name: "Flappy Bird",
