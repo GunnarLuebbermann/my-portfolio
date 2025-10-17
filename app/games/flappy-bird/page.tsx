@@ -245,7 +245,7 @@ export default function FlappyBirdPage() {
       )}
 
       <p className="text-sm text-gray-300 mt-4 text-center">
-        Steuerung: Tap / Space. Bei Game Over: Tap oder B, um neu zu starten.
+        Steuerung: Tap / Space. Bei Game Over: Tap oder Comma, um neu zu starten.
       </p>
     </div>
   );
