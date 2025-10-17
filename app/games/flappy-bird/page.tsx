@@ -86,7 +86,12 @@ export default function FlappyBirdPage() {
     fetchHighscores();
   };
 
-useEffect(() => { fetchHighscores(); }, []);
+  useEffect(() => {
+    const load = async () => {
+      await fetchHighscores();
+    };
+    load();
+  }, []);
 
   // Main game loop
   useEffect(() => {
@@ -98,9 +103,11 @@ useEffect(() => { fetchHighscores(); }, []);
       const dt = t - lastTime;
       lastTime = t;
 
+      const dtSec = dt / 1000; // in Sekunden
+
       if (running && !gameOverRef.current) {
-        birdV.current += gravity;
-        birdY.current += birdV.current;
+        birdV.current += gravity * dtSec * 60; // FPS-unabhängig
+        birdY.current += birdV.current * dtSec * 60;
 
         pipes.current.forEach((p) => (p.x -= pipeSpeed));
         if (pipes.current.length && pipes.current[0].x + pipeWidth < 0) pipes.current.shift();
@@ -150,28 +157,36 @@ useEffect(() => { fetchHighscores(); }, []);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    ctx.clearRect(0, 0, cw, ch);
+    // Background Farbverlauf
+    const grad = ctx.createLinearGradient(0, 0, 0, ch);
+    grad.addColorStop(0, "#70c5ce");
+    grad.addColorStop(1, "#a0e0f0");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, cw, ch);
 
-    // Draw pipes
+    // Boden
+    ctx.fillStyle = "#ded895";
+    ctx.fillRect(0, ch - 90, cw, 90);
+
+    // Pipes
     ctx.fillStyle = "#2fa04a";
     for (const p of pipes.current) {
       ctx.fillRect(p.x, 0, p.width, p.gapY);
-      ctx.fillRect(p.x, p.gapY + p.gapHeight, p.width, ch - (p.gapY + p.gapHeight));
+      ctx.fillRect(p.x, p.gapY + p.gapHeight, p.width, ch - (p.gapY + p.gapHeight) - 90);
     }
 
-    // Draw bird
+    // Bird
     const birdX = 120;
     ctx.save();
     ctx.translate(birdX, birdY.current);
     ctx.rotate(Math.max(-0.6, Math.min(0.8, birdV.current / 12)));
-
     ctx.beginPath();
     ctx.fillStyle = "#FFD33D";
     ctx.arc(0, 0, birdRadius, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
-    // Score overlay
+    // Score
     ctx.fillStyle = "#fff";
     ctx.font = "22px Inter, Arial";
     ctx.textAlign = "center";
