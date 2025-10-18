@@ -84,44 +84,59 @@ export default function GamesPage() {
           Spiele direkt im Browser! Fordere dich selbst heraus, knacke deinen Highscore und entdecke neue Spiele, die laufend hinzukommen.
         </p>
       </div>
-    
-    <div className="flex flex-col items-center text-white">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl px-4">
-        {games.map((game, index) => (
-          <motion.div
-            key={game.slug}
-            className={`p-6 rounded-2xl bg-gradient-to-br ${game.color} shadow-lg hover:scale-105 transition-all duration-200 ${game.disabled ? "opacity-60 cursor-not-allowed" : ""
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {games.map((game, index) => (
+            <motion.div
+              key={game.slug}
+              className={`group relative overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 ${
+                game.disabled ? "opacity-70" : "hover:scale-105"
               }`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-          >
-            {game.disabled ? (
-              <div className="flex flex-col h-full">
-                <div className="flex justify-center mb-4">{game.icon}</div>
-                <h2 className="text-2xl font-semibold mb-2 text-center">
-                  {game.name}
-                </h2>
-                <p className="text-sm text-gray-200 text-center mb-4">
-                  {game.description}
-                </p>
-                <p className="text-center italic text-gray-300">
-                  Bald verfügbar
-                </p>
-              </div>
-            ) : (
-              <Link href={`/games/${game.slug}`}>
-                <div className="flex flex-col items-center text-center">
-                  <div className="mb-4">{game.icon}</div>
-                  <h2 className="text-2xl font-semibold mb-2">{game.name}</h2>
-                  <p className="text-sm text-gray-200">{game.description}</p>
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+            >
+              <div className={`absolute inset-0 bg-gradient-to-br ${game.color} opacity-90`} />
+              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors duration-300" />
+              
+              {game.disabled ? (
+                <div className="relative p-8 flex flex-col items-center text-center text-white h-full min-h-[240px] justify-center">
+                  <div className="mb-6 p-4 bg-white/20 rounded-full backdrop-blur-sm">
+                    {game.icon}
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3">{game.name}</h3>
+                  <p className="text-white/90 mb-6 leading-relaxed">{game.description}</p>
+                  <div className="mt-auto">
+                    <span className="inline-flex items-center px-4 py-2 bg-white/20 rounded-full text-sm font-medium backdrop-blur-sm">
+                      🚀 Bald verfügbar
+                    </span>
+                  </div>
                 </div>
-              </Link>
-            )}
-          </motion.div>
-        ))}
-      </div>
-    </div>
+              ) : (
+                <Link href={`/games/${game.slug}`} className="block">
+                  <div className="relative p-8 flex flex-col items-center text-center text-white h-full min-h-[240px] justify-center group-hover:transform group-hover:scale-105 transition-transform duration-300">
+                    <div className="mb-6 p-4 bg-white/20 rounded-full backdrop-blur-sm group-hover:bg-white/30 transition-colors duration-300">
+                      {game.icon}
+                    </div>
+                    <h3 className="text-2xl font-bold mb-3 group-hover:text-white/90 transition-colors duration-300">
+                      {game.name}
+                    </h3>
+                    <p className="text-white/90 group-hover:text-white/80 leading-relaxed transition-colors duration-300">
+                      {game.description}
+                    </p>
+                    <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              )}
+            </motion.div>
+          ))}
+        </div>
     </section>
   );
 }

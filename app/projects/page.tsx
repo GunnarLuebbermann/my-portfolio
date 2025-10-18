@@ -16,26 +16,12 @@ const projects: Project[] = [
     tech: ["Next.js", "TypeScript", "TailwindCSS"],
     status: "completed",
   },
-  // {
-  //   title: "React Dashboard",
-  //   description: "Interactive analytics dashboard with real-time data visualization using Recharts and state management.",
-  //   link: "",
-  //   tech: ["React", "Recharts", "Zustand"],
-  //   status: "in-progress",
-  // },
-  // {
-  //   title: "API Integration Demo",
-  //   description: "Full-stack application demonstrating REST API integration with data visualization and error handling.",
-  //   link: "",
-  //   tech: ["React", "Node.js", "REST API"],
-  //   status: "planned",
-  // },
 ];
 
 const statusColors = {
-  completed: "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400",
-  'in-progress': "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400",
-  planned: "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400",
+  completed: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+  'in-progress': "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+  planned: "bg-slate-100 text-slate-700 dark:bg-slate-800/50 dark:text-slate-400",
 };
 
 export default function ProjectsPage() {
@@ -50,47 +36,53 @@ export default function ProjectsPage() {
         </p>
       </div>
       
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((project) => (
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {projects.map((project, index) => (
           <div
             key={project.title}
-            className="group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-xl hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300"
+            className="group relative bg-white dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700/50 rounded-2xl p-8 hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-300 dark:hover:border-blue-500/50 hover:-translate-y-1 transition-all duration-500 ease-out"
+            style={{ animationDelay: `${index * 100}ms` }}
           >
-            <div className="flex items-start justify-between mb-3">
-              <h3 className="text-xl font-semibold group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                {project.title}
-              </h3>
-              <span className={`px-2 py-1 text-xs font-medium rounded-full ${statusColors[project.status]}`}>
-                {project.status === 'in-progress' ? 'In Arbeit' : 
-                 project.status === 'planned' ? 'Geplant' : 'Fertig'}
-              </span>
-            </div>
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-900/10 dark:to-purple-900/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             
-            <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">
-              {project.description}
-            </p>
-            
-            <div className="flex flex-wrap gap-2 mb-4">
-              {project.tech.map((tech) => (
-                <span
-                  key={tech}
-                  className="px-2 py-1 text-xs bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300 rounded-md"
-                >
-                  {tech}
+            <div className="relative z-10">
+              <div className="flex items-start justify-between mb-4">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+                  {project.title}
+                </h3>
+                <span className={`px-3 py-1.5 text-sm font-semibold rounded-full whitespace-nowrap ${statusColors[project.status]}`}>
+                  {project.status === 'in-progress' ? 'In Arbeit' : 
+                   project.status === 'planned' ? 'Geplant' : 'Fertig'}
                 </span>
-              ))}
+              </div>
+              
+              <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                {project.description}
+              </p>
+              
+              <div className="flex flex-wrap gap-2 mb-6">
+                {project.tech.map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-3 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 dark:from-blue-900/30 dark:to-indigo-900/30 dark:text-blue-300 rounded-lg border border-blue-200/50 dark:border-blue-700/50 hover:scale-105 transition-transform duration-200"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+              
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-white bg-transparent hover:bg-blue-600 dark:hover:bg-blue-500 border-2 border-blue-600 dark:border-blue-400 rounded-lg transition-all duration-300 group/link"
+              >
+                <Github size={16} className="group-hover/link:rotate-12 transition-transform duration-300" />
+                GitHub Repository
+                <ExternalLink size={14} className="group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform duration-300" />
+              </a>
             </div>
-            
-            <a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
-            >
-              <Github size={16} />
-              GitHub Repository
-              <ExternalLink size={14} />
-            </a>
           </div>
         ))}
       </div>

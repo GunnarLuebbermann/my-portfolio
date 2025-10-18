@@ -83,46 +83,75 @@ export default function MemoryPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center text-white p-4">
-      <motion.h1
-        className="text-4xl font-bold mb-6 text-pink-400"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
+    <div className="flex flex-col items-center justify-center p-6">
+      <motion.div
+        className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 shadow-2xl"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
       >
-        🧠 Memory
-      </motion.h1>
+        <motion.h1
+          className="text-4xl font-bold mb-8 text-center text-white drop-shadow-lg"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          🧠 Memory
+        </motion.h1>
 
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        {cards.map((card, index) => (
-          <motion.button
-            key={card.id}
-            onClick={() => handleCardClick(index)}
-            className={`w-20 h-20 rounded-2xl text-3xl font-bold flex items-center justify-center shadow-lg transition-all ${
-              card.flipped || card.matched
-                ? "bg-pink-600"
-                : "bg-gray-800 hover:bg-gray-700"
-            }`}
-            whileTap={{ scale: 0.9 }}
+        <div className="grid grid-cols-4 gap-3 mb-8">
+          {cards.map((card, index) => (
+            <motion.button
+              key={card.id}
+              onClick={() => handleCardClick(index)}
+              className={`aspect-square rounded-xl text-2xl font-bold flex items-center justify-center shadow-lg transition-all duration-300 ${card.flipped || card.matched
+                  ? "bg-gradient-to-br from-pink-500 to-purple-600 text-white scale-105"
+                  : "bg-gradient-to-br from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 text-gray-300 hover:scale-105"
+                }`}
+              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.05 }}
+              initial={{ opacity: 0, rotateY: 180 }}
+              animate={{ opacity: 1, rotateY: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              {card.flipped || card.matched ? card.emoji : "❓"}
+            </motion.button>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <motion.div
+            className="bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/30 shadow-lg"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
           >
-            {card.flipped || card.matched ? card.emoji : "❓"}
-          </motion.button>
-        ))}
-      </div>
+            <p className="text-sm text-white/80 mb-1">Züge</p>
+            <p className="text-3xl font-bold text-white">
+              {moves}
+            </p>
+          </motion.div>
+          <motion.div
+            className="bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/30 shadow-lg"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <p className="text-sm text-white/80 mb-1">Bester Score</p>
+            <p className="text-3xl font-bold text-white">
+              {bestScore !== null ? bestScore : "–"}
+            </p>
+          </motion.div>
+        </div>
 
-      <div className="text-lg text-center">
-        <p>Züge: {moves}</p>
-        <p>
-          Bester Score:{" "}
-          {bestScore !== null ? bestScore : <span className="text-gray-400">–</span>}
-        </p>
-      </div>
-
-      <button
-        onClick={startNewGame}
-        className="mt-4 px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-lg"
-      >
-        Neues Spiel
-      </button>
+        <motion.button
+          onClick={startNewGame}
+          className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105"
+          whileTap={{ scale: 0.98 }}
+        >
+          Neues Spiel
+        </motion.button>
+      </motion.div>
     </div>
   );
 }

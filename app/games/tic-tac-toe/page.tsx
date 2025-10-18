@@ -51,56 +51,72 @@ export default function TicTacToePage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center text-white p-4">
+    <div className="flex flex-col items-center justify-center p-4">
       <motion.h1
-        className="text-4xl font-bold mb-6 text-blue-400"
-        initial={{ opacity: 0, y: -10 }}
+        className="text-5xl md:text-6xl font-bold mb-8 text-slate-200 drop-shadow-2xl"
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
       >
-        ❌ Tic Tac Toe ⭕
-
+        Tic Tac Toe
       </motion.h1>
 
-      <div className="grid grid-cols-3 gap-2">
+      <motion.div 
+        className="grid grid-cols-3 gap-3 p-6 bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-slate-700"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         {board.map((cell, index) => (
           <motion.button
             key={index}
             onClick={() => handleClick(index)}
-            className="w-20 h-20 bg-gray-800 border-2 border-gray-600 text-3xl font-bold rounded-xl hover:bg-gray-700 transition"
+            className="w-24 h-24 bg-slate-700/80 border-2 border-slate-600 text-4xl font-bold rounded-xl 
+                     hover:bg-slate-600/80 hover:border-slate-500 transition-all duration-200 
+                     shadow-lg hover:shadow-xl active:scale-95"
             whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.05 }}
           >
             {cell === "X" ? (
-              <span className="text-red-400">X</span>
+              <span className="text-red-400 drop-shadow-lg">X</span>
             ) : cell === "O" ? (
-              <span className="text-green-400">O</span>
+              <span className="text-emerald-400 drop-shadow-lg">O</span>
             ) : null}
           </motion.button>
         ))}
-      </div>
+      </motion.div>
 
-      <div className="mt-6 text-lg">
+      <div className="mt-8 text-lg">
         {winner ? (
           <motion.div
-            className="text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            className="text-center bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 border border-slate-700"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
             {winner === "Draw" ? (
-              <p className="text-yellow-400 text-xl font-semibold">Unentschieden!</p>
+              <p className="text-yellow-400 text-2xl font-bold mb-4">🤝 Unentschieden!</p>
             ) : (
-              <p className="text-green-400 text-xl font-semibold">
-                {winner} hat gewonnen! 🎉
+              <p className="text-emerald-400 text-2xl font-bold mb-4">
+                🎉 {winner} hat gewonnen! 🎉
               </p>
             )}
-            <button
+            <motion.button
               onClick={restartGame}
-              className="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
+              className="px-6 py-3 bg-slate-700/80 hover:bg-slate-600/80 border border-slate-600 hover:border-slate-500
+                   text-slate-200 rounded-lg font-semibold shadow-lg hover:shadow-xl transform transition-all duration-200"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               Neues Spiel
-            </button>
+            </motion.button>
           </motion.div>
         ) : (
-          <p className="text-gray-300">Am Zug: {currentPlayer}</p>
+          <motion.p 
+            className="text-slate-300 text-xl font-medium bg-slate-800/30 px-4 py-2 rounded-lg backdrop-blur-sm"
+          >
+            Am Zug: <span className={currentPlayer === "X" ? "text-red-400" : "text-emerald-400"}>{currentPlayer}</span>
+          </motion.p>
         )}
       </div>
     </div>

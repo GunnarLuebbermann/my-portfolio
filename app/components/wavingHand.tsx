@@ -15,7 +15,7 @@ export default function WavingHand() {
                 ease: "easeInOut",
                 repeatDelay: 1
             }}
-            className="inline-block origin-bottom-right"
+            className="inline-block text-2xl sm:text-3xl md:text-4xl cursor-default select-none"
             style={{ transformOrigin: "70% 70%" }}
         >
             👋
