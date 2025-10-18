@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
+import { motion } from "framer-motion";
 
 type Pipe = { x: number; width: number; gapY: number; gapHeight: number; scored?: boolean };
 
@@ -18,16 +19,17 @@ export default function FlappyBirdPage() {
   const [running, setRunning] = useState(false);
   const [playerName, setPlayerName] = useState("");
   const [highscores, setHighscores] = useState<{ name: string; score: number }[]>([]);
+  const [showAll, setShowAll] = useState(false);
 
   const width = 480;
   const height = 640;
   const birdRadius = 14;
-  const gravity = 1600; // Pixel pro Sekunde²
-  const flapVelocity = -400; // Pixel pro Sekunde
-  const pipeSpeed = 400; // Pixel pro Sekunde
+  const gravity = 1600;
+  const flapVelocity = -400;
+  const pipeSpeed = 400;
   const pipeWidth = 60;
   const pipeGap = 150;
-  const pipeInterval = 1.5; // Sekunden
+  const pipeInterval = 1.5;
   const pipeTimer = useRef(0);
   const scoreRef = useRef(0);
 
@@ -67,13 +69,12 @@ export default function FlappyBirdPage() {
     });
   };
 
-  // Supabase Highscores
+  // 🏆 Supabase Highscores
   const fetchHighscores = async () => {
     const { data, error } = await supabase
       .from("flappy-bird-highscores")
       .select("*")
-      .order("score", { ascending: false })
-      .limit(10);
+      .order("score", { ascending: false });
     if (!error && data) setHighscores(data);
   };
 
@@ -88,26 +89,23 @@ export default function FlappyBirdPage() {
 
   useEffect(() => { fetchHighscores(); }, []);
 
-  // Main game loop
+  // 🎮 Game loop
   useEffect(() => {
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext("2d")!;
     let lastTime = performance.now();
 
     const handleFrame = (t: number) => {
-      const dt = (t - lastTime) / 1000; // Sekunden
+      const dt = (t - lastTime) / 1000;
       lastTime = t;
 
       if (running && !gameOverRef.current) {
-        // FPS-unabhängig
         birdV.current += gravity * dt;
         birdY.current += birdV.current * dt;
 
-        // Pipes bewegen
         pipes.current.forEach((p) => (p.x -= pipeSpeed * dt));
         if (pipes.current.length && pipes.current[0].x + pipeWidth < 0) pipes.current.shift();
 
-        // Pipes spawn
         pipeTimer.current += dt;
         if (pipeTimer.current > pipeInterval) {
           pipeTimer.current = 0;
@@ -115,7 +113,6 @@ export default function FlappyBirdPage() {
           pipes.current.push({ x: width + 20, width: pipeWidth, gapY, gapHeight: pipeGap });
         }
 
-        // Score
         pipes.current.forEach((p) => {
           if (!p.scored && p.x + p.width < 120) {
             p.scored = true;
@@ -150,103 +147,156 @@ export default function FlappyBirdPage() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    // Background
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+
     const grad = ctx.createLinearGradient(0, 0, 0, ch);
     grad.addColorStop(0, "#70c5ce");
     grad.addColorStop(1, "#a0e0f0");
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, cw, ch);
 
-    // Boden
     ctx.fillStyle = "#ded895";
     ctx.fillRect(0, ch - 90, cw, 90);
 
-    // Pipes
     ctx.fillStyle = "#2fa04a";
     for (const p of pipes.current) {
       ctx.fillRect(p.x, 0, p.width, p.gapY);
       ctx.fillRect(p.x, p.gapY + p.gapHeight, p.width, ch - (p.gapY + p.gapHeight) - 90);
     }
 
-    // Bird
     const birdX = 120;
     ctx.save();
     ctx.translate(birdX, birdY.current);
-    ctx.rotate(Math.max(-0.6, Math.min(0.8, birdV.current / 500))); // kleiner Faktor jetzt FPS-unabhängig
+    ctx.rotate(Math.max(-0.6, Math.min(0.8, birdV.current / 500)));
     ctx.beginPath();
     ctx.fillStyle = "#FFD33D";
     ctx.arc(0, 0, birdRadius, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
-
-    // Score
-    ctx.fillStyle = "#fff";
-    ctx.font = "22px Inter, Arial";
-    ctx.textAlign = "center";
-    ctx.fillText(`${scoreRef.current}`, cw / 2, 30);
   };
 
-  // Steuerung: Space / Click / Tap / B
+  // 🎮 Controls
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.code === "Space") {
         e.preventDefault();
-        if (!running) setRunning(true); flap();
+        if (!running) setRunning(true);
+        flap();
       }
-    if (e.code === "Comma" && gameOverRef.current) {
+      if (e.code === "Comma" && gameOverRef.current) {
         e.preventDefault();
         resetGame(true);
       }
     };
     window.addEventListener("keydown", onKey);
-
-    const canvas = canvasRef.current!;
-    const onClick = () => { if (gameOverRef.current) resetGame(true); else { if (!running) setRunning(true); flap(); } };
-    const onTouch = (e: TouchEvent) => { e.preventDefault(); onClick(); };
-
-    canvas.addEventListener("touchstart", onTouch, { passive: false });
-
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      canvas.removeEventListener("touchstart", onTouch);
-    };
+    return () => window.removeEventListener("keydown", onKey);
   }, [running]);
 
   useEffect(() => resetGame(false), []);
 
-  return (
-    <div className="flex flex-col items-center justify-start p-6 min-h-screen text-white">
-      <h1 className="text-3xl font-bold mb-4">Flappy Bird</h1>
+  const displayedScores = showAll ? highscores : highscores.slice(0, 3);
 
-      <div className="flex flex-row items-start gap-6">
-        <canvas ref={canvasRef} width={width} height={height} className="rounded-xl shadow-lg" />
+  return (    
+  <div className="flex flex-col items-center justify-center p-6">
+        <motion.div
+          className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 shadow-2xl"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <motion.h1
+            className="text-4xl font-bold mb-8 text-center text-white drop-shadow-lg"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            🐦 Flappy Bird
+          </motion.h1>
 
-        <div className="flex flex-col gap-4 w-64">
-          <h2 className="text-xl font-bold">Highscores</h2>
-          <ol className="list-decimal ml-4">
-            {highscores.map((h, idx) => <li key={idx} className="text-gray-200">{h.name}: {h.score}</li>)}
-          </ol>
-        </div>
-      </div>
-
-      {gameOverRef.current && (
-        <div className="mt-4 flex flex-col items-center gap-2 w-full max-w-md">
-          <input
-            type="text"
-            placeholder="Dein Name"
-            value={playerName}
-            onChange={(e) => setPlayerName(e.target.value)}
-            className="w-full px-3 py-2 rounded bg-white text-gray-700 placeholder-gray-400"
+        <div className="relative flex flex-col items-center">
+          <canvas
+            ref={canvasRef}
+            width={width}
+            height={height}
+            onClick={() => { if (gameOverRef.current) resetGame(true); else { if (!running) setRunning(true); flap(); } }}
+            onTouchStart={(e) => { e.preventDefault(); if (gameOverRef.current) resetGame(true); else { if (!running) setRunning(true); flap(); } }}
+            className="rounded-xl shadow-2xl border-2 border-white/20 bg-sky-400 touch-none select-none"
+            style={{ touchAction: "none" }}
           />
-          <button onClick={submitHighscore} className="px-4 py-2 bg-green-500 rounded text-white font-bold">
-            Highscore speichern
-          </button>
-        </div>
-      )}
 
-      <p className="text-sm text-gray-300 mt-4 text-center">
-        Steuerung: Tap / Space. Bei Game Over: Tap oder Comma, um neu zu starten.
-      </p>
+          {gameOverRef.current && (
+            <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center">
+              <div className="bg-white/20 backdrop-blur-md rounded-xl p-6 text-center border border-white/30">
+                <h3 className="text-2xl font-bold text-white mb-4">Game Over!</h3>
+                <p className="text-white/80 mb-4">Final Score: {score}</p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* SCORE + HIGHSCORES */}
+        <div className="mt-6 text-center">
+          <h2 className="text-white text-2xl font-bold mb-4">🏆 Dein Score: {score}</h2>
+
+          <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
+            <h3 className="text-xl font-bold text-white mb-3">Top Highscores</h3>
+            {displayedScores.length > 0 ? (
+              displayedScores.map((h, idx) => (
+                <div key={idx} className="flex justify-between items-center p-2 bg-white/10 rounded-lg border border-white/10 mb-1">
+                  <span className="text-white font-medium">#{idx + 1} {h.name}</span>
+                  <span className="text-yellow-400 font-bold">{h.score}</span>
+                </div>
+              ))
+            ) : (
+              <p className="text-white/60 text-center py-4">No scores yet</p>
+            )}
+
+            {highscores.length > 3 && (
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="mt-3 w-full text-sm text-white/80 hover:text-white transition-all underline"
+              >
+                {showAll ? "Weniger anzeigen" : "Mehr anzeigen"}
+              </button>
+            )}
+          </div>
+
+          {gameOverRef.current && (
+            <div className="mt-4 space-y-3">
+              <input
+                type="text"
+                placeholder="Enter your name"
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/60 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+              />
+              <button
+                onClick={submitHighscore}
+                disabled={!playerName.trim()}
+                className="w-full px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed rounded-lg text-white font-bold transition-all duration-200 shadow-lg"
+              >
+                Save Score
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* CONTROLS */}
+        <div className="text-center mt-6 space-y-2">
+          <p className="text-white/70"><span className="font-semibold">Controls:</span> Tap / Space to flap</p>
+          <p className="text-white/70"><span className="font-semibold">Restart:</span> Tap / Comma</p>
+          {!running && !gameOverRef.current && (
+            <button
+              onClick={() => setRunning(true)}
+              className="mt-4 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 rounded-lg text-white font-bold transition-all duration-200 shadow-lg"
+            >
+              Start Game
+            </button>
+          )}
+        </div>
+      </motion.div>
     </div>
   );
 }
+``
