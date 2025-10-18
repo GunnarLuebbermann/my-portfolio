@@ -6,6 +6,7 @@ type Project = {
   link: string;
   tech: string[];
   status: 'completed' | 'in-progress' | 'planned';
+  demo?: string; // optional Live-Demo
 };
 
 const projects: Project[] = [
@@ -15,6 +16,15 @@ const projects: Project[] = [
     link: "https://github.com/GunnarLuebbermann/my-portfolio",
     tech: ["Next.js", "TypeScript", "TailwindCSS"],
     status: "completed",
+    demo: "https://www.gunnar-luebbermann.de",
+  },
+  {
+    title: "Weather Dashboard",
+    description: "Full-featured weather app with forecasts, favorites, dark mode, and charts built with Next.js and TanStack Query.",
+    link: "https://github.com/GunnarLuebbermann/weather-dashboard",
+    tech: ["Next.js", "TypeScript", "TailwindCSS", "TanStack Query"],
+    status: "completed",
+    demo: "https://weather-dashboard-seven-drab.vercel.app",
   },
 ];
 
@@ -35,32 +45,32 @@ export default function ProjectsPage() {
           Eine Auswahl meiner Arbeiten und Experimente in der Webentwicklung
         </p>
       </div>
-      
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {projects.map((project, index) => (
-          <div
+            <div
             key={project.title}
-            className="group relative bg-white dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700/50 rounded-2xl p-8 hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-300 dark:hover:border-blue-500/50 hover:-translate-y-1 transition-all duration-500 ease-out"
+            className="group relative bg-white dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700/50 rounded-2xl p-8 hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-300 dark:hover:border-blue-500/50 hover:-translate-y-1 transition-all duration-500 ease-out col-span-full sm:col-span-1"
             style={{ animationDelay: `${index * 100}ms` }}
-          >
+            >
             {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-900/10 dark:to-purple-900/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            
+
             <div className="relative z-10">
               <div className="flex items-start justify-between mb-4">
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
                   {project.title}
                 </h3>
                 <span className={`px-3 py-1.5 text-sm font-semibold rounded-full whitespace-nowrap ${statusColors[project.status]}`}>
-                  {project.status === 'in-progress' ? 'In Arbeit' : 
-                   project.status === 'planned' ? 'Geplant' : 'Fertig'}
+                  {project.status === 'in-progress' ? 'In Arbeit' :
+                    project.status === 'planned' ? 'Geplant' : 'Fertig'}
                 </span>
               </div>
-              
+
               <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
                 {project.description}
               </p>
-              
+
               <div className="flex flex-wrap gap-2 mb-6">
                 {project.tech.map((tech) => (
                   <span
@@ -71,17 +81,31 @@ export default function ProjectsPage() {
                   </span>
                 ))}
               </div>
-              
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-white bg-transparent hover:bg-blue-600 dark:hover:bg-blue-500 border-2 border-blue-600 dark:border-blue-400 rounded-lg transition-all duration-300 group/link"
-              >
-                <Github size={16} className="group-hover/link:rotate-12 transition-transform duration-300" />
-                GitHub Repository
-                <ExternalLink size={14} className="group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform duration-300" />
-              </a>
+
+              <div className="flex gap-2">
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-white bg-transparent hover:bg-blue-600 dark:hover:bg-blue-500 border-2 border-blue-600 dark:border-blue-400 rounded-lg transition-all duration-300 group/link"
+                >
+                  <Github size={16} className="group-hover/link:rotate-12 transition-transform duration-300" />
+                  GitHub Repository
+                  <ExternalLink size={14} className="group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform duration-300" />
+                </a>
+
+                {project.demo && (
+                  <a
+                    href={project.demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-green-600 dark:text-green-400 hover:text-white bg-transparent hover:bg-green-600 dark:hover:bg-green-500 border-2 border-green-600 dark:border-green-400 rounded-lg transition-all duration-300 group/link"
+                  >
+                    Live Demo
+                    <ExternalLink size={14} className="group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform duration-300" />
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         ))}
