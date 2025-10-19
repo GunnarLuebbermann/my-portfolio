@@ -12,7 +12,7 @@ type Project = {
 const projects: Project[] = [
   {
     title: "Portfolio Website",
-    description: "Modern personal portfolio built with Next.js, TypeScript, and TailwindCSS featuring responsive design and dark mode.",
+    description: "Ein modernes, responsives Portfolio mit Next.js, TypeScript und Tailwind CSS. Features umfassen Dark Mode, Animationen und eine optimierte Performance für alle Geräte.",
     link: "https://github.com/GunnarLuebbermann/my-portfolio",
     tech: ["Next.js", "TypeScript", "TailwindCSS"],
     status: "completed",
@@ -20,11 +20,18 @@ const projects: Project[] = [
   },
   {
     title: "Weather Dashboard",
-    description: "Full-featured weather app with forecasts, favorites, dark mode, and charts built with Next.js and TanStack Query.",
+    description: "Ein vollständiges Wetter-Dashboard mit 5-Tage-Vorhersage, Favoritenliste, interaktiven Charts und Dark Mode. Nutzt moderne React Patterns und State Management.",
     link: "https://github.com/GunnarLuebbermann/weather-dashboard",
     tech: ["Next.js", "TypeScript", "TailwindCSS", "TanStack Query"],
     status: "completed",
     demo: "https://weather-dashboard-seven-drab.vercel.app",
+  },
+  {
+    title: "Net Sleeper",
+    description: "Ein schlankes Go-Tool, das den PC automatisch herunterfährt, sobald Downloads abgeschlossen sind. Ideal für große Downloads über Nacht oder bei langsamen Verbindungen.",
+    link: "https://github.com/GunnarLuebbermann/net-sleeper",
+    tech: ["GoLang"],
+    status: "in-progress",
   },
 ];
 
