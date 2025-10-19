@@ -27,9 +27,9 @@ const projects: Project[] = [
     demo: "https://weather-dashboard-seven-drab.vercel.app",
   },
   {
-    title: "Net Sleeper",
+    title: "Net Sleep",
     description: "Ein schlankes Go-Tool, das den PC automatisch herunterfährt, sobald Downloads abgeschlossen sind. Ideal für große Downloads über Nacht oder bei langsamen Verbindungen.",
-    link: "https://github.com/GunnarLuebbermann/net-sleeper",
+    link: "https://github.com/GunnarLuebbermann/net-sleep",
     tech: ["GoLang"],
     status: "in-progress",
   },
