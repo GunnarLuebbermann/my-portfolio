@@ -45,10 +45,15 @@ export default function HomePage() {
 
       <motion.h1
         variants={itemVariants}
-        className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-foreground to-gray-600 bg-clip-text text-transparent py-2"
+        className="text-4xl md:text-5xl font-bold mb-4 
+             bg-gradient-to-r from-gray-900 to-gray-700 
+             dark:from-gray-100 dark:to-gray-400 
+             bg-clip-text text-transparent 
+             tracking-tight"
       >
         Hey, ich bin Gunnar <span className="text-foreground"><WavingHand /></span>
       </motion.h1>
+
 
       <motion.p
         variants={itemVariants}
