@@ -51,7 +51,7 @@ export default function HomePage() {
              bg-clip-text text-transparent 
              tracking-tight"
       >
-        Hey, ich bin Gunnar <span className="text-foreground"><WavingHand /></span>
+        Hey, ich bin Gunnar <span className="inline-block" style={{ WebkitBackgroundClip: "unset", backgroundClip: "unset", color: "unset", WebkitTextFillColor: "initial" }}><WavingHand /></span>
       </motion.h1>
 
 
