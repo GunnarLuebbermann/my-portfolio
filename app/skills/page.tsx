@@ -9,7 +9,7 @@ import {
   SiNpm,
   SiPython,
   SiHtml5,
-  SiCss3,
+  SiCss,
   SiJavascript,
   SiTypescript,
 } from "react-icons/si";
@@ -66,7 +66,7 @@ const skills: Skill[] = [
   },
   {
     name: "CSS",
-    icon: <SiCss3 className="text-4xl" />,
+    icon: <SiCss className="text-4xl" />,
     level: 5,
     category: "Frontend",
     description: "Responsive Layouts, TailwindCSS, moderne Design-Systeme.",

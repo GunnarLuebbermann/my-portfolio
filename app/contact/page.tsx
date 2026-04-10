@@ -1,6 +1,6 @@
 import { Mail } from 'lucide-react';
 import { SiGithub } from 'react-icons/si';
-import { SiLinkedin } from 'react-icons/si';
+import { FaLinkedin } from 'react-icons/fa';
 
 export default function ContactPage() {
   return (
@@ -36,7 +36,7 @@ export default function ContactPage() {
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-300"></div>
             <div className="relative flex flex-col items-center text-center">
               <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-full mb-4 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30 transition-colors">
-                <SiLinkedin className="w-8 h-8 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform" />
+                <FaLinkedin className="w-8 h-8 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform" />
               </div>
               <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">LinkedIn</h3>
             </div>
