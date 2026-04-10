@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Zap, Puzzle, CircleDot, Square, Layout, Bird, Bomb, Hash, Type } from "lucide-react";
+import { Zap, Puzzle, CircleDot, Square, Layout, Bird, Bomb, Hash, Type, Shield, Grid3X3 } from "lucide-react";
 
 export default function GamesPage() {
   const games = [
@@ -53,6 +53,20 @@ export default function GamesPage() {
       description: "Errate das deutsche Wort in 6 Versuchen!",
       icon: <Type className="w-8 h-8 text-emerald-400" />,
       color: "from-emerald-500 to-green-700",
+    },
+    {
+      name: "Tower Defense",
+      slug: "tower-defense",
+      description: "Baue Türme und verteidige deine Basis!",
+      icon: <Shield className="w-8 h-8 text-orange-400" />,
+      color: "from-orange-500 to-red-700",
+    },
+    {
+      name: "Sudoku",
+      slug: "sudoku",
+      description: "Löse das Zahlenrätsel!",
+      icon: <Grid3X3 className="w-8 h-8 text-cyan-400" />,
+      color: "from-cyan-500 to-blue-700",
     },
     {
       name: "Space Shooter",
