@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
-@theme {
-  --animate-wave-hand: wave-hand 2.5s ease-in-out 1s infinite;
+@utility animate-wave-hand {
+  animation: wave-hand 2.5s ease-in-out 1s infinite;
 }
 
 @keyframes wave-hand {
