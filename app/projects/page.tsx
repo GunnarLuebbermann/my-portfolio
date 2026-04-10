@@ -1,4 +1,5 @@
-import { ExternalLink, Github } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
+import { SiGithub } from 'react-icons/si';
 
 type Project = {
   title: string;
@@ -96,7 +97,7 @@ export default function ProjectsPage() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-white bg-transparent hover:bg-blue-600 dark:hover:bg-blue-500 border-2 border-blue-600 dark:border-blue-400 rounded-lg transition-all duration-300 group/link"
                 >
-                  <Github size={16} className="group-hover/link:rotate-12 transition-transform duration-300" />
+                  <SiGithub size={16} className="group-hover/link:rotate-12 transition-transform duration-300" />
                   GitHub Repository
                   <ExternalLink size={14} className="group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform duration-300" />
                 </a>
