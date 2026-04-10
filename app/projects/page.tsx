@@ -31,7 +31,7 @@ const projects: Project[] = [
     description: "Ein schlankes Go-Tool, das den PC automatisch herunterfährt, sobald Downloads abgeschlossen sind. Ideal für große Downloads über Nacht oder bei langsamen Verbindungen.",
     link: "https://github.com/GunnarLuebbermann/net-sleep",
     tech: ["GoLang"],
-    status: "in-progress",
+    status: "completed",
   },
 ];
 

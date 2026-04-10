@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Zap, Puzzle, CircleDot, Square, Layout, Bird, Bomb, Hash } from "lucide-react";
+import { Zap, Puzzle, CircleDot, Square, Layout, Bird, Bomb, Hash, Type } from "lucide-react";
 
 export default function GamesPage() {
   const games = [
@@ -41,19 +41,25 @@ export default function GamesPage() {
       color: "from-gray-500 to-slate-700",
     },
     {
-      name: "Space Shooter",
-      slug: "space-shooter",
-      description: "Schieße auf die feindlichen Raumschiffe.",
-      icon: <Zap className="w-8 h-8 text-purple-400" />,
-      color: "from-purple-600 to-violet-800",
-      disabled: true,
-    },
-    {
       name: "2048",
       slug: "2048",
       description: "Kombiniere Zahlen bis 2048.",
       icon: <Hash className="w-8 h-8 text-amber-400" />,
       color: "from-amber-500 to-yellow-700",
+    },
+    {
+      name: "Wordle",
+      slug: "wordle",
+      description: "Errate das deutsche Wort in 6 Versuchen!",
+      icon: <Type className="w-8 h-8 text-emerald-400" />,
+      color: "from-emerald-500 to-green-700",
+    },
+    {
+      name: "Space Shooter",
+      slug: "space-shooter",
+      description: "Schieße auf die feindlichen Raumschiffe.",
+      icon: <Zap className="w-8 h-8 text-purple-400" />,
+      color: "from-purple-600 to-violet-800",
       disabled: true,
     },
     {
